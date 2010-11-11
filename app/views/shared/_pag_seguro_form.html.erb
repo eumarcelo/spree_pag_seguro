@@ -1,0 +1,44 @@
+<% if order.payment_method.type == "PaymentMethod::PagSeguro" && order.payment_state == "balance_due" %>
+
+	<h4 style="border-bottom:1px solid #DDDDDD;">Efetue o Pagamento para concretizar a compra</h4>
+
+	<form target="pagseguro" accept-charset="ISO-8859-1" action="https://pagseguro.uol.com.br/checkout/checkout.jhtml" id="pagseguro" class="pagseguro" method="post">
+		<%= hidden_field_tag "email_cobranca", order.payment_method.preferences["pagseguro_email"] %>
+		<%= hidden_field_tag "tipo", "CP" %>
+		<%= hidden_field_tag "moeda", "BRL" %>
+		<%= hidden_field_tag "ref_transacao", order.id %>
+
+		<% i = 0 %>
+		<% order.line_items.each_with_index do |item, i| %>
+			<% i += 1 %>
+			<%= hidden_field_tag "item_quant_#{i}", item.quantity %>
+			<%= hidden_field_tag "item_id_#{i}", 		item.product.id %>
+			<%= hidden_field_tag "item_descr_#{i}", item.product.name %>
+			<%= hidden_field_tag "item_valor_#{i}", (item.price * 100).to_i %>
+		<% end %>
+		<% i += 1 %>
+		<%= hidden_field_tag "item_quant_#{i}", 1 %>
+		<%= hidden_field_tag "item_id_#{i}", 		0 %>
+		<%= hidden_field_tag "item_descr_#{i}", "Frete" %>
+		<%= hidden_field_tag "item_valor_#{i}", (order.adjustment_total * 100).to_i %>
+	
+		<%= hidden_field_tag "cliente_nome", "#{order.bill_address.firstname} #{order.bill_address.lastname}"	%>
+		<%= hidden_field_tag "cliente_cep", 	order.bill_address.zipcode	%>
+		<%= hidden_field_tag "cliente_end", order.bill_address.address1 %>
+		<%= hidden_field_tag "cliente_num", nil		%> 
+		<%= hidden_field_tag "cliente_compl", order.bill_address.address2 %>
+		<%= hidden_field_tag "cliente_bairro", nil %>
+		<%= hidden_field_tag "cliente_cidade", order.bill_address.city	%>
+		<%= hidden_field_tag "cliente_uf", nil %>
+		<%= hidden_field_tag "cliente_pais", "BRA" %>
+		<%= hidden_field_tag "cliente_ddd", nil	%>
+		<%= hidden_field_tag "cliente_tel", order.bill_address.phone	%>
+		<%= hidden_field_tag "cliente_email", order.email	%>
+	
+
+		<input type="image" 
+		src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/pagamentos/184x42-pagar-cinza-assina.gif" 
+		name="submit" alt="Pague com PagSeguro - é rápido, grátis e seguro!">
+
+	</form>
+<% end %>
