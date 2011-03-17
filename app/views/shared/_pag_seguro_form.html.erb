@@ -20,7 +20,7 @@
 		<%= hidden_field_tag "item_quant_#{i}", 1 %>
 		<%= hidden_field_tag "item_id_#{i}", 		0 %>
 		<%= hidden_field_tag "item_descr_#{i}", "Frete" %>
-		<%= hidden_field_tag "item_valor_#{i}", (order.adjustment_total * 100).to_i %>
+		<%= hidden_field_tag "item_valor_#{i}", 1 %>
 	
 		<%= hidden_field_tag "cliente_nome", "#{order.bill_address.firstname} #{order.bill_address.lastname}"	%>
 		<%= hidden_field_tag "cliente_cep", 	order.bill_address.zipcode	%>
